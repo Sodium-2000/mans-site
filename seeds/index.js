@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const WeeklyLetter = require('../models/weekly_letter');
 // mongoose.connect('mongodb://localhost:27017/mans-db', {
-mongoose.connect('mongodb+srv://najeebsalem1_db_user:LTwlKsWq3CdE8vXR@cluster0.5nridgq.mongodb.net/?appName=Cluster0', {
+const DB_URL = process.env.DB_URL;
+mongoose.connect(DB_URL, {
     // useNewUrlParser: true,
     // useCreateIndex: true,
     // useUnifiedTopology: true
