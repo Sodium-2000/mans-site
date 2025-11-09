@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= letter.title || 'المقال الأسبوعي' %></title>
+    <style>
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+        .letter-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .letter-meta {
+            color: #767676;
+            margin-bottom: 1rem;
+        }
+        .letter-body {
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="letter-container">
+        <a href="/weeklyletters" class="back-button">← العودة إلى جميع المقالات</a>
+        
+        <article>
+            <h1><%= letter.title || 'بدون عنوان' %></h1>
+            <div class="letter-meta">
+                <% if (letter.date) { %>
+                    <%= new Date(letter.date).toLocaleDateString('ar-EG') %>
+                <% } %>
+            </div>
+            <div class="letter-body">
+                <pre style="margin:0; font-family:inherit; white-space:pre-wrap;"><%- letter.body %></pre>
+            </div>
+        </article>
+    </div>
+</body>
+</html>

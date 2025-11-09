@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المقالات الأسبوعية</title>
+    <!-- Bootstrap RTL CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <style>
+        .letter-header {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .letter-header:hover {
+            background-color: #f8f9fa;
+        }
+        .letter-body {
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin-top: 1rem;
+        }
+        .collapse {
+            transition: all 0.3s ease;
+        }
+        .letter-date {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <h1 class="mb-4">المقالات الأسبوعية <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+                                        <!-- Admin-only edit button; stopPropagation so it doesn't toggle the accordion -->
+                                        <a href="/weeklyletters/make" 
+                                           class="btn btn-sm btn-outline-secondary" 
+                                           onclick="event.stopPropagation();">
+                                            أنشئ مقال جديد
+                                        </a>
+                                    <% } %></h1>
+
+        <% if (weeklyletters && weeklyletters.length) { %>
+            <div class="accordion" id="lettersAccordion">
+                <% weeklyletters.forEach((letter, index) => { %>
+                    <div class="accordion-item border-0 mb-3">
+                        <h2 class="accordion-header letter-header rounded" id="heading<%= letter._id %>">
+                            <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+                                        <!-- Admin-only edit button; stopPropagation so it doesn't toggle the accordion -->
+                                        <a href="/weeklyletters/<%= letter._id %>/edit" 
+                                           class="btn btn-sm btn-outline-secondary" 
+                                           onclick="event.stopPropagation();">
+                                            تعديل
+                                        </a>
+                                    <% } %>
+                            <button class="accordion-button <%= index === 0 ? '' : 'collapsed' %> bg-light" 
+                                    type="button" 
+                                    data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse<%= letter._id %>" 
+                                    aria-expanded="<%= index === 0 ? 'true' : 'false' %>" 
+                                    aria-controls="collapse<%= letter._id %>">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div>
+                                        <h4 class="mb-1 d-inline"><%= letter.title || 'بدون عنوان' %></h4>
+                                        <% if (letter.date) { %>
+                                            <div class="letter-date">
+                                                <%= new Date(letter.date).toLocaleDateString('ar-EG') %>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                    
+                                </div>
+                            </button>
+                        </h2>
+                        <div id="collapse<%= letter._id %>" 
+                             class="accordion-collapse collapse <%= index === 0 ? 'show' : '' %>" 
+                             aria-labelledby="heading<%= letter._id %>" 
+                             data-bs-parent="#lettersAccordion">
+                            <div class="accordion-body bg-light rounded-bottom">
+                                <pre style="margin:0; font-family:inherit; white-space:pre-wrap;"><%- letter.body %></pre>
+                                
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p class="text-center">لا توجد مقالات أسبوعية.</p>
+        <% } %>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
