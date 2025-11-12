@@ -1,0 +1,74 @@
+<%- include('../partials/header', { pageTitle: activity.title, isAdmin: isAdmin }) %>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="/activities" class="btn btn-link">← العودة إلى الأنشطة</a>
+            <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+                <a href="/activities/<%= activity._id %>/edit" class="btn btn-outline-secondary btn-sm">تعديل</a>
+            <% } %>
+        </div>
+
+        <!-- Title and Status -->
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <h1><%= activity.title %></h1>
+            <% if (activity.isActive) { %>
+                <span class="badge bg-success fs-6">نشط</span>
+            <% } else { %>
+                <span class="badge bg-secondary fs-6">غير نشط</span>
+            <% } %>
+        </div>
+
+        <!-- Date -->
+        <% if (activity.date) { %>
+            <p class="text-muted mb-4">
+                <i class="bi bi-calendar"></i>
+                <%= new Date(activity.date).toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+            </p>
+        <% } %>
+
+        <!-- Summary -->
+        <% if (activity.summary) { %>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">نبذة عن النشاط</h5>
+                    <p class="card-text" style="white-space: pre-wrap;"><%= activity.summary %></p>
+                </div>
+            </div>
+        <% } %>
+
+        <!-- Registration Link -->
+        <% if (activity.registrationLink) { %>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">التسجيل</h5>
+                    <a href="<%= activity.registrationLink %>" target="_blank" class="btn btn-primary">
+                        التسجيل في النشاط
+                        <i class="bi bi-box-arrow-up-left"></i>
+                    </a>
+                </div>
+            </div>
+        <% } %>
+
+        <!-- Images -->
+        <% if (activity.imageLinks && activity.imageLinks.length > 0) { %>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">صور النشاط</h5>
+                    <div class="row">
+                        <% activity.imageLinks.forEach(imageLink => { %>
+                            <% if (imageLink) { %>
+                                <div class="col-md-6 mb-3">
+                                    <img src="<%= imageLink %>" alt="صورة النشاط" class="img-fluid rounded shadow-sm">
+                                </div>
+                            <% } %>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

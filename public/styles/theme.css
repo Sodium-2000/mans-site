@@ -1,0 +1,43 @@
+:root {
+    --main-bg: #f8f9fa;
+    --main-color: #212529;
+    --primary: #00f108;
+    --accent: #ffc107;
+    --border-radius: 8px;
+    --font-family: 'Cairo', 'Tahoma', 'Arial', sans-serif;
+}
+
+body {
+    background: var(--main-bg);
+    color: var(--main-color);
+    font-family: var(--font-family);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-family: var(--font-family);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-accent {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: #212529;
+}
+
+.card,
+.accordion-item {
+    border-radius: var(--border-radius);
+}
+
+footer {
+    font-size: 1rem;
+    color: #666;
+}

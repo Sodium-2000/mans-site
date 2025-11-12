@@ -1,0 +1,53 @@
+<%- include('../partials/header', { pageTitle: 'إنشاء نشاط جديد', isAdmin: true }) %>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <a href="/activities" class="btn btn-link mb-3">← العودة إلى الأنشطة</a>
+        
+        <h1 class="mb-4">إنشاء نشاط أو دورة جديدة</h1>
+
+        <form action="/activities/new" method="POST">
+            <div class="mb-3">
+                <label for="title" class="form-label">العنوان <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="summary" class="form-label">ملخص النشاط</label>
+                <textarea class="form-control" id="summary" name="summary" rows="4" placeholder="اختياري"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="date" class="form-label">التاريخ</label>
+                <input type="date" class="form-control" id="date" name="date">
+                <small class="text-muted">اتركه فارغاً لاستخدام تاريخ اليوم</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="registrationLink" class="form-label">رابط التسجيل</label>
+                <input type="url" class="form-control" id="registrationLink" name="registrationLink" placeholder="https://example.com/register">
+            </div>
+
+            <div class="mb-3">
+                <label for="imageLinks" class="form-label">روابط الصور</label>
+                <textarea class="form-control" id="imageLinks" name="imageLinks" rows="3" placeholder="أدخل روابط الصور، كل رابط في سطر جديد أو مفصولة بفواصل"></textarea>
+                <small class="text-muted">مثال: https://example.com/image1.jpg, https://example.com/image2.jpg</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="isActive" class="form-label">الحالة</label>
+                <select class="form-select" id="isActive" name="isActive">
+                    <option value="true" selected>نشط</option>
+                    <option value="false">غير نشط</option>
+                </select>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">إنشاء النشاط</button>
+                <a href="/activities" class="btn btn-secondary">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

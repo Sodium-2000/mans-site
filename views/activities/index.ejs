@@ -1,0 +1,44 @@
+<%- include('../partials/header', { pageTitle: 'الأنشطة والدورات', isAdmin: isAdmin }) %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">الأنشطة والدورات</h1>
+    <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+        <a href="/activities/new" class="btn btn-primary btn-sm">إنشاء نشاط جديد</a>
+    <% } %>
+</div>
+
+<% if (activities && activities.length) { %>
+    <div class="row">
+        <% activities.forEach(activity => { %>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title"><%= activity.title %></h5>
+                            <% if (activity.isActive) { %>
+                                <span class="badge bg-success">نشط</span>
+                            <% } else { %>
+                                <span class="badge bg-secondary">غير نشط</span>
+                            <% } %>
+                        </div>
+                        
+                        <% if (activity.date) { %>
+                            <p class="text-muted small mb-3">
+                                <i class="bi bi-calendar"></i>
+                                <%= new Date(activity.date).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+                            </p>
+                        <% } %>
+                        
+                        <a href="/activities/<%= activity._id %>" class="btn btn-outline-primary btn-sm">عرض التفاصيل</a>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+<% } else { %>
+    <div class="alert alert-info text-center">
+        لا توجد أنشطة أو دورات حالياً
+    </div>
+<% } %>
+
+<%- include('../partials/footer') %>

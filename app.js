@@ -31,9 +31,15 @@ db.once("open", () => {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Mount routers
 const weeklyLettersRouter = require('./routes/weeklyletters');
 app.use('/weeklyletters', weeklyLettersRouter);
+
+const activitiesRouter = require('./routes/activities');
+app.use('/activities', activitiesRouter);
 
 // Admin Routes
 app.get('/admin/login', (req, res) => {
@@ -58,6 +64,11 @@ app.get('/admin/logout', (req, res) => {
 app.get('/', (req, res) => {
     res.render('home')
 })
+
+app.get('/about', (req, res) => {
+    res.render('about', { isAdmin: req.session.isAdmin });
+})
+
 // Weeklyletters routes moved to ./routes/weeklyletters.js
 
 

@@ -1,0 +1,61 @@
+<%- include('../partials/header', { pageTitle: 'تعديل النشاط', isAdmin: true }) %>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <a href="/activities/<%= activity._id %>" class="btn btn-link mb-3">← العودة إلى النشاط</a>
+        
+        <h1 class="mb-4">تعديل النشاط</h1>
+
+        <form action="/activities/<%= activity._id %>/edit" method="POST">
+            <div class="mb-3">
+                <label for="title" class="form-label">العنوان <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="title" name="title" value="<%= activity.title %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="summary" class="form-label">ملخص النشاط</label>
+                <textarea class="form-control" id="summary" name="summary" rows="4"><%= activity.summary || '' %></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="date" class="form-label">التاريخ</label>
+                <input type="date" class="form-control" id="date" name="date" 
+                       value="<%= activity.date ? new Date(activity.date).toISOString().split('T')[0] : '' %>">
+            </div>
+
+            <div class="mb-3">
+                <label for="registrationLink" class="form-label">رابط التسجيل</label>
+                <input type="url" class="form-control" id="registrationLink" name="registrationLink" 
+                       value="<%= activity.registrationLink || '' %>">
+            </div>
+
+            <div class="mb-3">
+                <label for="imageLinks" class="form-label">روابط الصور</label>
+                <textarea class="form-control" id="imageLinks" name="imageLinks" rows="3"><%= activity.imageLinks ? activity.imageLinks.join(', ') : '' %></textarea>
+                <small class="text-muted">أدخل روابط الصور، مفصولة بفواصل</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="isActive" class="form-label">الحالة</label>
+                <select class="form-select" id="isActive" name="isActive">
+                    <option value="true" <%= activity.isActive ? 'selected' : '' %>>نشط</option>
+                    <option value="false" <%= !activity.isActive ? 'selected' : '' %>>غير نشط</option>
+                </select>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                <a href="/activities/<%= activity._id %>" class="btn btn-secondary">إلغاء</a>
+            </div>
+        </form>
+
+        <!-- Delete Form -->
+        <form action="/activities/<%= activity._id %>/delete" method="POST" 
+              onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا النشاط؟');" 
+              class="mt-4">
+            <button type="submit" class="btn btn-danger">حذف النشاط</button>
+        </form>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,82 @@
+<%- include('partials/header', { pageTitle: 'من أنا', isAdmin: typeof isAdmin !== 'undefined' ? isAdmin : false }) %>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Page Title -->
+        <h1 class="text-center mb-4">من أنا</h1>
+
+        <!-- Profile Image Section -->
+        <div class="text-center mb-4">
+            <img src="/images/profile.jpg" alt="صورة شخصية" class="img-fluid rounded-circle shadow" style="max-width: 250px;">
+        </div>
+
+        <!-- About Section -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title">نبذة عني</h3>
+                <p class="card-text" style="line-height: 1.8;">
+                    بسم الله الرحمن الرحيم، أنا داعية إلى الله تعالى، أسعى لنشر العلم النافع والخير بين الناس. 
+                    أحمد الله على نعمة الإسلام وأسأله التوفيق والسداد في خدمة دينه وعباده. 
+                    أؤمن بأهمية التواصل المستمر مع المجتمع ونشر القيم الإسلامية الأصيلة في زمن تكثر فيه الفتن. 
+                    أحرص على تقديم المحتوى الهادف الذي ينير الدرب ويقرب القلوب من الله عز وجل.
+                </p>
+            </div>
+        </div>
+
+        <!-- Jobs/Roles Section -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title">المناصب والأعمال</h3>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <i class="bi bi-bookmark-check"></i>
+                        <strong>إمام وخطيب المسجد</strong> - أقوم بإمامة المصلين وإلقاء خطبة الجمعة
+                    </li>
+                    <li class="list-group-item">
+                        <i class="bi bi-book"></i>
+                        <strong>معلم القرآن الكريم</strong> - تحفيظ وتفسير كتاب الله
+                    </li>
+                    <li class="list-group-item">
+                        <i class="bi bi-people"></i>
+                        <strong>مرشد ديني</strong> - تقديم الاستشارات والنصائح الدينية
+                    </li>
+                    <li class="list-group-item">
+                        <i class="bi bi-pencil-square"></i>
+                        <strong>كاتب المقالات الأسبوعية</strong> - نشر مقالات دينية هادفة
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Masjid Location Section -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title">موقع المسجد</h3>
+                <p class="text-muted">يمكنكم زيارتنا في المسجد للصلاة والدروس الدينية</p>
+                
+                <!-- Google Maps Embed -->
+                <div class="ratio ratio-16x9 rounded overflow-hidden">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3623.9876543210!2d46.6753!3d24.7136!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjTCsDQyJzQ5LjAiTiA0NsKwNDAnMzEuMSJF!5e0!3m2!1sen!2ssa!4v1234567890123!5m2!1sen!2ssa" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+                <p class="text-center mt-3">
+                    <small class="text-muted">
+                        ملاحظة: يرجى تحديث الخريطة بالموقع الصحيح للمسجد
+                    </small>
+                </p>
+            </div>
+        </div>
+
+        <!-- Contact Section (Optional) -->
+        <div class="text-center mb-4">
+            <a href="/weeklyletters" class="btn btn-primary">اطلع على المقالات الأسبوعية</a>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
