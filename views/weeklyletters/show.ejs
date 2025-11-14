@@ -46,6 +46,18 @@
             <div class="letter-body">
                 <pre style="margin:0; font-family:inherit; white-space:pre-wrap;"><%- letter.body %></pre>
             </div>
+            
+            <!-- Display images if any -->
+            <% if (letter.images && letter.images.length > 0) { %>
+                <div style="margin-top: 2rem;">
+                    <h3>الصور</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                        <% letter.images.forEach(image => { %>
+                            <img src="<%= image.url %>" alt="صورة المقال" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
         </article>
     </div>
 </body>

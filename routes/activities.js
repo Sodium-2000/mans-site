@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const ActivityCourse = require('../models/activity_course');
 const { requireAdmin } = require('../middleware/auth');
+const { uploadActivity } = require('../config/cloudinary');
 
 // Index - list all activities/courses
 router.get('/', async (req, res) => {
@@ -22,14 +23,20 @@ router.get('/new', requireAdmin, (req, res) => {
 });
 
 // Handle create (admin only)
-router.post('/new', requireAdmin, async (req, res) => {
+router.post('/new', requireAdmin, uploadActivity, async (req, res) => {
     try {
         const { title, summary, date, registrationLink, isActive, imageLinks } = req.body;
-        
-        // Process image links (could be comma-separated or array)
+
+        // Process uploaded images
+        const images = req.files ? req.files.map(file => ({
+            url: file.path,
+            filename: file.filename
+        })) : [];
+
+        // Process external image links
         let imageLinkArray = [];
         if (imageLinks) {
-            imageLinkArray = typeof imageLinks === 'string' 
+            imageLinkArray = typeof imageLinks === 'string'
                 ? imageLinks.split(',').map(link => link.trim()).filter(link => link)
                 : imageLinks;
         }
@@ -40,18 +47,17 @@ router.post('/new', requireAdmin, async (req, res) => {
             date: date || new Date(),
             registrationLink: registrationLink || '',
             isActive: isActive === 'true' || isActive === true,
+            images: images,
             imageLinks: imageLinkArray
         });
-        
+
         await activity.save();
         res.redirect(`/activities/${activity._id}`);
     } catch (err) {
         console.error(err);
         res.status(500).send('خطأ أثناء حفظ النشاط');
     }
-});
-
-// Show single activity/course
+});// Show single activity/course
 router.get('/:id', async (req, res) => {
     try {
         const activity = await ActivityCourse.findById(req.params.id);
@@ -76,14 +82,23 @@ router.get('/:id/edit', requireAdmin, async (req, res) => {
 });
 
 // Handle update (admin only)
-router.post('/:id/edit', requireAdmin, async (req, res) => {
+router.post('/:id/edit', requireAdmin, uploadActivity, async (req, res) => {
     try {
         const { title, summary, date, registrationLink, isActive, imageLinks } = req.body;
-        
-        // Process image links
+        const activity = await ActivityCourse.findById(req.params.id);
+
+        // Keep existing images and add new ones
+        const newImages = req.files ? req.files.map(file => ({
+            url: file.path,
+            filename: file.filename
+        })) : [];
+
+        const images = [...(activity.images || []), ...newImages].slice(0, 5); // Max 5 images
+
+        // Process external image links
         let imageLinkArray = [];
         if (imageLinks) {
-            imageLinkArray = typeof imageLinks === 'string' 
+            imageLinkArray = typeof imageLinks === 'string'
                 ? imageLinks.split(',').map(link => link.trim()).filter(link => link)
                 : imageLinks;
         }
@@ -94,17 +109,16 @@ router.post('/:id/edit', requireAdmin, async (req, res) => {
             date: date || new Date(),
             registrationLink: registrationLink || '',
             isActive: isActive === 'true' || isActive === true,
+            images: images,
             imageLinks: imageLinkArray
         });
-        
+
         res.redirect(`/activities/${req.params.id}`);
     } catch (err) {
         console.error(err);
         res.status(500).send('خطأ أثناء تحديث النشاط');
     }
-});
-
-// Handle delete (admin only)
+});// Handle delete (admin only)
 router.post('/:id/delete', requireAdmin, async (req, res) => {
     try {
         await ActivityCourse.findByIdAndDelete(req.params.id);

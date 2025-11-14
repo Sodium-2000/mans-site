@@ -6,7 +6,7 @@
         
         <h1 class="mb-4">إنشاء نشاط أو دورة جديدة</h1>
 
-        <form action="/activities/new" method="POST">
+        <form action="/activities/new" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label">العنوان <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="title" name="title" required>
@@ -29,7 +29,13 @@
             </div>
 
             <div class="mb-3">
-                <label for="imageLinks" class="form-label">روابط الصور</label>
+                <label for="images" class="form-label">صور النشاط (حتى 5 صور)</label>
+                <input type="file" class="form-control" id="images" name="images" multiple accept="image/*">
+                <small class="text-muted">اختر حتى 5 صور (JPG, PNG, GIF, WEBP)</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="imageLinks" class="form-label">روابط صور خارجية (اختياري)</label>
                 <textarea class="form-control" id="imageLinks" name="imageLinks" rows="3" placeholder="أدخل روابط الصور، كل رابط في سطر جديد أو مفصولة بفواصل"></textarea>
                 <small class="text-muted">مثال: https://example.com/image1.jpg, https://example.com/image2.jpg</small>
             </div>

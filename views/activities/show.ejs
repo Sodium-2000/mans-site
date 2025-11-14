@@ -51,18 +51,30 @@
         <% } %>
 
         <!-- Images -->
-        <% if (activity.imageLinks && activity.imageLinks.length > 0) { %>
+        <% if ((activity.images && activity.images.length > 0) || (activity.imageLinks && activity.imageLinks.length > 0)) { %>
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">صور النشاط</h5>
                     <div class="row">
-                        <% activity.imageLinks.forEach(imageLink => { %>
-                            <% if (imageLink) { %>
+                        <!-- Cloudinary uploaded images -->
+                        <% if (activity.images && activity.images.length > 0) { %>
+                            <% activity.images.forEach(image => { %>
                                 <div class="col-md-6 mb-3">
-                                    <img src="<%= imageLink %>" alt="صورة النشاط" class="img-fluid rounded shadow-sm">
+                                    <img src="<%= image.url %>" alt="صورة النشاط" class="img-fluid rounded shadow-sm">
                                 </div>
-                            <% } %>
-                        <% }); %>
+                            <% }); %>
+                        <% } %>
+                        
+                        <!-- External image links -->
+                        <% if (activity.imageLinks && activity.imageLinks.length > 0) { %>
+                            <% activity.imageLinks.forEach(imageLink => { %>
+                                <% if (imageLink) { %>
+                                    <div class="col-md-6 mb-3">
+                                        <img src="<%= imageLink %>" alt="صورة النشاط" class="img-fluid rounded shadow-sm">
+                                    </div>
+                                <% } %>
+                            <% }); %>
+                        <% } %>
                     </div>
                 </div>
             </div>

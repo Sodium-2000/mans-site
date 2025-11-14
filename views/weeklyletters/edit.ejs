@@ -15,7 +15,7 @@
         <a href="/weeklyletters" class="back-link">← العودة إلى جميع المقالات</a>
         <h1 class="mb-3">تعديل المقال</h1>
 
-        <form action="/weeklyletters/<%= letter._id %>/edit" method="POST">
+        <form action="/weeklyletters/<%= letter._id %>/edit" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label">العنوان</label>
                 <input id="title" name="title" class="form-control" value="<%= letter.title %>" required>
@@ -24,6 +24,27 @@
                 <label for="body" class="form-label">المحتوى</label>
                 <textarea id="body" name="body" class="form-control" rows="10" required><%= letter.body %></textarea>
             </div>
+            
+            <!-- Display existing images -->
+            <% if (letter.images && letter.images.length > 0) { %>
+                <div class="mb-3">
+                    <label class="form-label">الصور الحالية (<%= letter.images.length %>/5)</label>
+                    <div class="row">
+                        <% letter.images.forEach(image => { %>
+                            <div class="col-md-3 mb-2">
+                                <img src="<%= image.url %>" alt="صورة" class="img-fluid rounded">
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
+            
+            <div class="mb-3">
+                <label for="images" class="form-label">إضافة صور جديدة (الحد الأقصى 5 صور إجمالاً)</label>
+                <input type="file" class="form-control" id="images" name="images" multiple accept="image/*">
+                <small class="text-muted">سيتم إضافة الصور الجديدة إلى الصور الموجودة</small>
+            </div>
+            
             <div class="d-flex gap-2">
                 <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
             </div>

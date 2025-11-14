@@ -55,7 +55,7 @@
         <a href="/weeklyletters" class="back-link">← العودة إلى جميع المقالات</a>
         <h1>إنشاء مقال جديد</h1>
         
-    <form action="/weeklyletters/make" method="POST">
+        <form action="/weeklyletters/make" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="title">العنوان:</label>
                 <input type="text" id="title" name="title" required>
@@ -64,6 +64,12 @@
             <div class="form-group">
                 <label for="body">المحتوى:</label>
                 <textarea id="body" name="body" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="images">صور المقال (حتى 5 صور):</label>
+                <input type="file" id="images" name="images" multiple accept="image/*">
+                <small style="display:block; color:#666; margin-top:0.5rem;">اختر حتى 5 صور (JPG, PNG, GIF, WEBP)</small>
             </div>
             
             <button type="submit">نشر المقال</button>

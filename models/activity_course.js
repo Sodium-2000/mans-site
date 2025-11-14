@@ -22,6 +22,10 @@ const ActivityCourseSchema = new Schema({
         type: Boolean,
         default: true
     },
+    images: [{
+        url: String,
+        filename: String
+    }],
     imageLinks: [{
         type: String
     }]

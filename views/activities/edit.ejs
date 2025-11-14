@@ -6,7 +6,7 @@
         
         <h1 class="mb-4">تعديل النشاط</h1>
 
-        <form action="/activities/<%= activity._id %>/edit" method="POST">
+        <form action="/activities/<%= activity._id %>/edit" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label">العنوان <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="title" name="title" value="<%= activity.title %>" required>
@@ -29,8 +29,28 @@
                        value="<%= activity.registrationLink || '' %>">
             </div>
 
+            <!-- Display existing images -->
+            <% if (activity.images && activity.images.length > 0) { %>
+                <div class="mb-3">
+                    <label class="form-label">الصور الحالية (<%= activity.images.length %>/5)</label>
+                    <div class="row">
+                        <% activity.images.forEach(image => { %>
+                            <div class="col-md-3 mb-2">
+                                <img src="<%= image.url %>" alt="صورة" class="img-fluid rounded">
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
+
             <div class="mb-3">
-                <label for="imageLinks" class="form-label">روابط الصور</label>
+                <label for="images" class="form-label">إضافة صور جديدة (الحد الأقصى 5 صور إجمالاً)</label>
+                <input type="file" class="form-control" id="images" name="images" multiple accept="image/*">
+                <small class="text-muted">سيتم إضافة الصور الجديدة إلى الصور الموجودة (الحد الأقصى 5 صور)</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="imageLinks" class="form-label">روابط صور خارجية (اختياري)</label>
                 <textarea class="form-control" id="imageLinks" name="imageLinks" rows="3"><%= activity.imageLinks ? activity.imageLinks.join(', ') : '' %></textarea>
                 <small class="text-muted">أدخل روابط الصور، مفصولة بفواصل</small>
             </div>

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const WeeklyLetter = require('../models/weekly_letter');
 const { requireAdmin } = require('../middleware/auth');
+const { uploadWeeklyLetter } = require('../config/cloudinary');
 
 // Index - list all letters (mounted at /weeklyletters)
 router.get('/', async (req, res) => {
@@ -20,10 +21,22 @@ router.get('/make', requireAdmin, (req, res) => {
 });
 
 // Handle create
-router.post('/make', requireAdmin, async (req, res) => {
+router.post('/make', requireAdmin, uploadWeeklyLetter, async (req, res) => {
     try {
         const { title, body } = req.body;
-        const letter = new WeeklyLetter({ title, body, date: new Date() });
+        
+        // Process uploaded images
+        const images = req.files ? req.files.map(file => ({
+            url: file.path,
+            filename: file.filename
+        })) : [];
+        
+        const letter = new WeeklyLetter({ 
+            title, 
+            body, 
+            date: new Date(),
+            images: images
+        });
         await letter.save();
         res.redirect(`/weeklyletters/${letter._id}`);
     } catch (err) {
@@ -69,10 +82,20 @@ router.get('/:id/edit', requireAdmin, async (req, res) => {
 });
 
 // Update
-router.post('/:id/edit', requireAdmin, async (req, res) => {
+router.post('/:id/edit', requireAdmin, uploadWeeklyLetter, async (req, res) => {
     try {
         const { title, body } = req.body;
-        await WeeklyLetter.findByIdAndUpdate(req.params.id, { title, body });
+        const letter = await WeeklyLetter.findById(req.params.id);
+        
+        // Keep existing images and add new ones
+        const newImages = req.files ? req.files.map(file => ({
+            url: file.path,
+            filename: file.filename
+        })) : [];
+        
+        const images = [...(letter.images || []), ...newImages].slice(0, 5); // Max 5 images
+        
+        await WeeklyLetter.findByIdAndUpdate(req.params.id, { title, body, images });
         res.redirect('/weeklyletters');
     } catch (err) {
         console.error(err);
