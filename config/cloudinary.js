@@ -15,7 +15,11 @@ const activityStorage = new CloudinaryStorage({
     params: {
         folder: 'activities',
         allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-        transformation: [{ width: 1200, height: 1200, crop: 'limit' }]
+        transformation: [
+            { width: 1600, height: 1600, crop: 'limit' },
+            { quality: 'auto:eco' },
+            { fetch_format: 'auto' }
+        ]
     }
 });
 
@@ -25,7 +29,11 @@ const weeklyLetterStorage = new CloudinaryStorage({
     params: {
         folder: 'weekly-letters',
         allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-        transformation: [{ width: 1200, height: 1200, crop: 'limit' }]
+        transformation: [
+            { width: 1600, height: 1600, crop: 'limit' },
+            { quality: 'auto:eco' },
+            { fetch_format: 'auto' }
+        ]
     }
 });
 
@@ -35,23 +43,29 @@ const generalStorage = new CloudinaryStorage({
     params: {
         folder: 'general',
         allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp']
+        ,
+        transformation: [
+            { width: 1600, height: 1600, crop: 'limit' },
+            { quality: 'auto:eco' },
+            { fetch_format: 'auto' }
+        ]
     }
 });
 
-// Multer instances (max 5 images)
+// Multer instances (allow larger uploads; Cloudinary will compress stored images)
 const uploadActivity = multer({
     storage: activityStorage,
-    limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+    limits: { fileSize: 25 * 1024 * 1024 } // 25MB per file
 }).array('images', 5);
 
 const uploadWeeklyLetter = multer({
     storage: weeklyLetterStorage,
-    limits: { fileSize: 5 * 1024 * 1024 }
+    limits: { fileSize: 25 * 1024 * 1024 }
 }).array('images', 5);
 
 const uploadGeneral = multer({
     storage: generalStorage,
-    limits: { fileSize: 5 * 1024 * 1024 }
+    limits: { fileSize: 25 * 1024 * 1024 }
 }).single('image');
 
 module.exports = {
