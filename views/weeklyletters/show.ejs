@@ -35,6 +35,14 @@
 <body>
     <div class="letter-container">
         <a href="/weeklyletters" class="back-button">← العودة إلى جميع المقالات</a>
+        <div style="float:left;">
+            <% if (typeof prevLetter !== 'undefined' && prevLetter) { %>
+                <a href="/weeklyletters/<%= prevLetter._id %>" class="back-button">&#8592; المقال السابق</a>
+            <% } %>
+            <% if (typeof nextLetter !== 'undefined' && nextLetter) { %>
+                <a href="/weeklyletters/<%= nextLetter._id %>" class="back-button">المقال التالي &#8594;</a>
+            <% } %>
+        </div>
         
         <article>
             <h1><%= letter.title || 'بدون عنوان' %></h1>

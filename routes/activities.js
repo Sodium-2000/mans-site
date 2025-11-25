@@ -3,6 +3,7 @@ const router = express.Router();
 const ActivityCourse = require('../models/activity_course');
 const { requireAdmin } = require('../middleware/auth');
 const { uploadActivity } = require('../config/cloudinary');
+const { cloudinary } = require('../config/cloudinary');
 
 // Index - list all activities/courses
 router.get('/', async (req, res) => {
@@ -121,11 +122,47 @@ router.post('/:id/edit', requireAdmin, uploadActivity, async (req, res) => {
 });// Handle delete (admin only)
 router.post('/:id/delete', requireAdmin, async (req, res) => {
     try {
+        const activity = await ActivityCourse.findById(req.params.id);
+        if (!activity) return res.status(404).send('النشاط غير موجود');
+
+        // Delete uploaded images from Cloudinary
+        if (activity.images && activity.images.length > 0) {
+            const destroys = activity.images.map(img =>
+                cloudinary.uploader.destroy(img.filename, { resource_type: 'image' }).catch(err => {
+                    console.error('Cloudinary delete error for', img.filename, err);
+                })
+            );
+            await Promise.all(destroys);
+        }
+
         await ActivityCourse.findByIdAndDelete(req.params.id);
         res.redirect('/activities');
     } catch (err) {
         console.error(err);
         res.status(500).send('خطأ أثناء حذف النشاط');
+    }
+});
+
+// Delete a single uploaded image
+router.delete('/:id/images/:filename', requireAdmin, async (req, res) => {
+    try {
+        const filename = decodeURIComponent(req.params.filename);
+        const activity = await ActivityCourse.findById(req.params.id);
+        if (!activity) return res.status(404).json({ error: 'النشاط غير موجود' });
+
+        const img = activity.images.find(i => i.filename === filename);
+        if (!img) return res.status(404).json({ error: 'الصورة غير موجودة' });
+
+        activity.images = activity.images.filter(i => i.filename !== filename);
+        await activity.save();
+
+        // Delete from Cloudinary
+        await cloudinary.uploader.destroy(filename, { resource_type: 'image' });
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'خطأ أثناء حذف الصورة' });
     }
 });
 

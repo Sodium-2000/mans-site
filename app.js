@@ -41,6 +41,10 @@ app.use('/weeklyletters', weeklyLettersRouter);
 const activitiesRouter = require('./routes/activities');
 app.use('/activities', activitiesRouter);
 
+// About router (handles public view and admin edit)
+const aboutRouter = require('./routes/about');
+app.use('/about', aboutRouter);
+
 // Admin Routes
 app.get('/admin/login', (req, res) => {
     res.render('admin/login', { error: null });
@@ -50,7 +54,7 @@ app.post('/admin/login', (req, res) => {
     const { password } = req.body;
     if (password === process.env.ADMIN_PASSWORD) {
         req.session.isAdmin = true;
-        res.redirect('/weeklyletters');
+        res.redirect('/');
     } else {
         res.render('admin/login', { error: 'كلمة المرور غير صحيحة' });
     }
@@ -58,16 +62,22 @@ app.post('/admin/login', (req, res) => {
 
 app.get('/admin/logout', (req, res) => {
     req.session.isAdmin = false;
-    res.redirect('/weeklyletters');
+    res.redirect('/');
 });
 
-app.get('/', (req, res) => {
-    res.render('home')
-})
-
-app.get('/about', (req, res) => {
-    res.render('about', { isAdmin: req.session.isAdmin });
-})
+app.get('/', async (req, res) => {
+    // Render home with about snippet and profile image if available
+    const About = require('./models/about');
+    const WeeklyLetter = require('./models/weekly_letter');
+    try {
+        const about = await About.findOne({});
+        const latestLetter = await WeeklyLetter.findOne().sort({ date: -1 });
+        res.render('home', { isAdmin: req.session.isAdmin, about, latestLetter });
+    } catch (err) {
+        console.error('Error fetching about for home:', err);
+        res.render('home', { isAdmin: req.session.isAdmin, about: null, latestLetter: null });
+    }
+});
 
 // Weeklyletters routes moved to ./routes/weeklyletters.js
 

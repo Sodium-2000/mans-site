@@ -31,8 +31,11 @@
                     <label class="form-label">الصور الحالية (<%= letter.images.length %>/5)</label>
                     <div class="row">
                         <% letter.images.forEach(image => { %>
-                            <div class="col-md-3 mb-2">
-                                <img src="<%= image.url %>" alt="صورة" class="img-fluid rounded">
+                            <div class="col-md-3 mb-2 image-item">
+                                <div class="position-relative">
+                                    <img src="<%= image.url %>" alt="صورة" class="img-fluid rounded">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 start-0 m-1 image-delete-btn" data-endpoint="/weeklyletters/<%= letter._id %>/images/<%= encodeURIComponent(image.filename) %>">حذف</button>
+                                </div>
                             </div>
                         <% }); %>
                     </div>
@@ -50,11 +53,12 @@
             </div>
         </form>
 
-        <form action="/weeklyletters/<%= letter._id %>/delete" method="POST" onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا المقال؟');" style="display:inline-block; margin-top:1rem;">
+        <form action="/weeklyletters/<%= letter._id %>/delete" method="POST" onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا المقال؟ هذا الإجراء لا يمكن التراجع عنه.');" style="display:inline-block; margin-top:1rem;">
             <button type="submit" class="btn btn-danger">حذف المقال</button>
         </form>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/image-delete.js"></script>
 </body>
 </html>

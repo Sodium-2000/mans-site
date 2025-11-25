@@ -1,0 +1,38 @@
+<%- include('partials/header', { pageTitle: 'تعديل من أنا', isAdmin: true }) %>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <h1 class="text-center mb-4">تعديل صفحة من أنا</h1>
+
+        <form action="/about/edit" method="POST" enctype="multipart/form-data">
+            <div class="mb-3 text-center">
+                <% if (about && about.profileImage && about.profileImage.url) { %>
+                    <img src="<%= about.profileImage.url %>" alt="صورة شخصية" class="img-fluid rounded-circle mb-2" style="max-width:150px;">
+                <% } else { %>
+                    <img src="/images/profile.jpg" alt="صورة شخصية" class="img-fluid rounded-circle mb-2" style="max-width:150px;">
+                <% } %>
+                <div>
+                    <label for="image" class="form-label">رفع صورة شخصية جديدة (اختياري)</label>
+                    <input class="form-control" type="file" id="image" name="image" accept="image/*">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">النص الرئيسي (مقدمة / من أنا)</label>
+                <textarea name="intro" class="form-control" rows="6"><%= about && about.intro ? about.intro : '' %></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">نبذة عن الصفحة (يظهر في الصفحة الرئيسية)</label>
+                <textarea name="snippet" class="form-control" rows="3"><%= about && about.snippet ? about.snippet : '' %></textarea>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="/about" class="btn btn-secondary">إلغاء</a>
+                <button type="submit" class="btn btn-primary">حفظ التعديلات</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

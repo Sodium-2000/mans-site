@@ -3,6 +3,7 @@ const router = express.Router();
 const WeeklyLetter = require('../models/weekly_letter');
 const { requireAdmin } = require('../middleware/auth');
 const { uploadWeeklyLetter } = require('../config/cloudinary');
+const { cloudinary } = require('../config/cloudinary');
 
 // Index - list all letters (mounted at /weeklyletters)
 router.get('/', async (req, res) => {
@@ -24,16 +25,16 @@ router.get('/make', requireAdmin, (req, res) => {
 router.post('/make', requireAdmin, uploadWeeklyLetter, async (req, res) => {
     try {
         const { title, body } = req.body;
-        
+
         // Process uploaded images
         const images = req.files ? req.files.map(file => ({
             url: file.path,
             filename: file.filename
         })) : [];
-        
-        const letter = new WeeklyLetter({ 
-            title, 
-            body, 
+
+        const letter = new WeeklyLetter({
+            title,
+            body,
             date: new Date(),
             images: images
         });
@@ -62,7 +63,12 @@ router.get('/:id', async (req, res) => {
     try {
         const letter = await WeeklyLetter.findById(req.params.id);
         if (!letter) return res.status(404).send('المقال غير موجود');
-        res.render('weeklyletters/show', { letter });
+
+        // find previous (newer date?) and next letters relative to this letter
+        const prevLetter = await WeeklyLetter.findOne({ date: { $lt: letter.date } }).sort({ date: -1 });
+        const nextLetter = await WeeklyLetter.findOne({ date: { $gt: letter.date } }).sort({ date: 1 });
+
+        res.render('weeklyletters/show', { letter, prevLetter, nextLetter });
     } catch (err) {
         console.error(err);
         res.status(500).send('حدث خطأ في الخادم');
@@ -86,15 +92,15 @@ router.post('/:id/edit', requireAdmin, uploadWeeklyLetter, async (req, res) => {
     try {
         const { title, body } = req.body;
         const letter = await WeeklyLetter.findById(req.params.id);
-        
+
         // Keep existing images and add new ones
         const newImages = req.files ? req.files.map(file => ({
             url: file.path,
             filename: file.filename
         })) : [];
-        
+
         const images = [...(letter.images || []), ...newImages].slice(0, 5); // Max 5 images
-        
+
         await WeeklyLetter.findByIdAndUpdate(req.params.id, { title, body, images });
         res.redirect('/weeklyletters');
     } catch (err) {
@@ -104,13 +110,52 @@ router.post('/:id/edit', requireAdmin, uploadWeeklyLetter, async (req, res) => {
 });
 
 // Delete
+// Delete
 router.post('/:id/delete', requireAdmin, async (req, res) => {
     try {
+        const letter = await WeeklyLetter.findById(req.params.id);
+        if (!letter) return res.status(404).send('المقال غير موجود');
+
+        // Delete all uploaded images from Cloudinary (if any)
+        if (letter.images && letter.images.length > 0) {
+            const destroyPromises = letter.images.map(img =>
+                cloudinary.uploader.destroy(img.filename, { resource_type: 'image' }).catch(err => {
+                    console.error('Cloudinary delete error for', img.filename, err);
+                })
+            );
+            await Promise.all(destroyPromises);
+        }
+
+        // Remove the document
         await WeeklyLetter.findByIdAndDelete(req.params.id);
         res.redirect('/weeklyletters');
     } catch (err) {
         console.error(err);
         res.status(500).send('حدث خطأ أثناء حذف المقال');
+    }
+});
+
+// Delete a single image from a weekly letter
+router.delete('/:id/images/:filename', requireAdmin, async (req, res) => {
+    try {
+        const filename = decodeURIComponent(req.params.filename);
+        const letter = await WeeklyLetter.findById(req.params.id);
+        if (!letter) return res.status(404).json({ error: 'المقال غير موجود' });
+
+        const img = letter.images.find(i => i.filename === filename);
+        if (!img) return res.status(404).json({ error: 'الصورة غير موجودة' });
+
+        // Remove from array
+        letter.images = letter.images.filter(i => i.filename !== filename);
+        await letter.save();
+
+        // Delete from Cloudinary
+        await cloudinary.uploader.destroy(filename, { resource_type: 'image' });
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'خطأ أثناء حذف الصورة' });
     }
 });
 

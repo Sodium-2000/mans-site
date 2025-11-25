@@ -31,7 +31,7 @@
         <% if (activity.summary) { %>
             <div class="card mb-4">
                 <div class="card-body">
-                    <h5 class="card-title">نبذة عن النشاط</h5>
+                    <h5 class="card-title">التفاصيل</h5>
                     <p class="card-text" style="white-space: pre-wrap;"><%= activity.summary %></p>
                 </div>
             </div>
@@ -51,7 +51,7 @@
         <% } %>
 
         <!-- Images -->
-        <% if ((activity.images && activity.images.length > 0) || (activity.imageLinks && activity.imageLinks.length > 0)) { %>
+        <% if (activity.images && activity.images.length > 0) { %>
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">صور النشاط</h5>
@@ -65,12 +65,27 @@
                             <% }); %>
                         <% } %>
                         
-                        <!-- External image links -->
+                        
+                    </div>
+                </div>
+            </div>
+        <% } %>
+        <!-- External Images link -->
+        <% if (activity.imageLinks && activity.imageLinks.length > 0) { %>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">المزيد من الصور</h5>
+                    <div class="row">
+                        <!-- External image links: render as clickable links (e.g., Google Drive/Dropbox) -->
                         <% if (activity.imageLinks && activity.imageLinks.length > 0) { %>
-                            <% activity.imageLinks.forEach(imageLink => { %>
-                                <% if (imageLink) { %>
+                            <% activity.imageLinks.forEach(link => { %>
+                                <% if (link) { %>
                                     <div class="col-md-6 mb-3">
-                                        <img src="<%= imageLink %>" alt="صورة النشاط" class="img-fluid rounded shadow-sm">
+                                        <div class="card h-100">
+                                            <div class="card-body d-flex align-items-center justify-content-between">
+                                                <a href="<%= link %>" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm">صور إضافية</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 <% } %>
                             <% }); %>

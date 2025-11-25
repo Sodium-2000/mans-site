@@ -3,14 +3,16 @@
 <!-- About Section -->
 <div class="row align-items-center mb-5">
     <div class="col-md-4 text-center mb-4 mb-md-0">
-        <img src="/images/profile.jpg" alt="صورة شخصية" class="img-fluid rounded-circle shadow" style="max-width: 200px;">
+        <% if (about && about.profileImage && about.profileImage.url) { %>
+            <div class="text-center mb-4">
+                <img src="<%= about.profileImage.url %>" alt="صورة شخصية" class="img-fluid  shadow" style="max-width: 250px;">
+            </div>
+        <% } %>
     </div>
     <div class="col-md-8">
-        <h2 class="mb-3">مرحباً بكم</h2>
+        <h2 class="mb-3">صفحة الشيخ محمد عبدالله سالم</h2>
         <p class="lead" style="line-height: 1.8;">
-            بسم الله الرحمن الرحيم، أنا داعية إلى الله تعالى، أسعى لنشر العلم النافع والخير بين الناس. 
-            أحمد الله على نعمة الإسلام وأسأله التوفيق والسداد في خدمة دينه وعباده. 
-            من خلال هذا الموقع، أشارككم المقالات الأسبوعية الهادفة والنصائح الدينية.
+            <%= (about && about.snippet) ? about.snippet : 'بسم الله الرحمن الرحيم، أنا داعية إلى الله تعالى، أسعى لنشر العلم النافع والخير بين الناس.' %>
         </p>
         <a href="/about" class="btn btn-primary">التعريف بصاحب الصفحة</a>
     </div>
@@ -20,6 +22,22 @@
 <div class="row mt-5">
     <div class="col-12">
         <h3 class="text-center mb-4">المقالات الأسبوعية</h3>
+        <!-- Latest weekly letter preview -->
+        <% if (typeof latestLetter !== 'undefined' && latestLetter) { %>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title"><%= latestLetter.title %></h5>
+                    <p class="text-muted small">
+                        <%= new Date(latestLetter.date).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+                    </p>
+                    <p class="card-text" style="white-space: pre-wrap;">
+                        <%= (latestLetter.body && latestLetter.body.length > 300) ? latestLetter.body.slice(0, 300) + '...' : latestLetter.body %>
+                    </p>
+                    <a href="/weeklyletters/" class="btn btn-primary">جميع المقالات الأسبوعية</a>
+                </div>
+            </div>
+        <% } %>
+
         <div class="text-center">
             <a href="/weeklyletters" class="btn btn-outline-primary">الذهاب إلى جميع المقالات الأسبوعية</a>
         </div>

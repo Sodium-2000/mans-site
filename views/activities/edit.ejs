@@ -13,7 +13,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="summary" class="form-label">ملخص النشاط</label>
+                <label for="summary" class="form-label">معلومات وتفاصيل النشاط</label>
                 <textarea class="form-control" id="summary" name="summary" rows="4"><%= activity.summary || '' %></textarea>
             </div>
 
@@ -35,8 +35,11 @@
                     <label class="form-label">الصور الحالية (<%= activity.images.length %>/5)</label>
                     <div class="row">
                         <% activity.images.forEach(image => { %>
-                            <div class="col-md-3 mb-2">
-                                <img src="<%= image.url %>" alt="صورة" class="img-fluid rounded">
+                            <div class="col-md-3 mb-2 image-item">
+                                <div class="position-relative">
+                                    <img src="<%= image.url %>" alt="صورة" class="img-fluid rounded">
+                                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 start-0 m-1 image-delete-btn" data-endpoint="/activities/<%= activity._id %>/images/<%= encodeURIComponent(image.filename) %>">حذف</button>
+                                </div>
                             </div>
                         <% }); %>
                     </div>
@@ -70,8 +73,8 @@
         </form>
 
         <!-- Delete Form -->
-        <form action="/activities/<%= activity._id %>/delete" method="POST" 
-              onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا النشاط؟');" 
+          <form action="/activities/<%= activity._id %>/delete" method="POST" 
+              onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا النشاط؟ هذا الإجراء لا يمكن التراجع عنه.');" 
               class="mt-4">
             <button type="submit" class="btn btn-danger">حذف النشاط</button>
         </form>
@@ -79,3 +82,4 @@
 </div>
 
 <%- include('../partials/footer') %>
+<script src="/js/image-delete.js"></script>
